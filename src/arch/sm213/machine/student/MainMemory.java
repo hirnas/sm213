@@ -71,7 +71,7 @@ public class MainMemory extends AbstractMainMemory {
    */
   @Override protected byte[] get (int address, int length) throws InvalidAddressException {
     byte[] bytelist = new byte[length];
-    if ((address < 0x0) || ((address + length) >= length())) {
+    if ((address < 0x0) || ((address + length) > length())) {
         throw new InvalidAddressException();
     }
     for (int i = 0; i < length; i++) {
@@ -87,11 +87,15 @@ public class MainMemory extends AbstractMainMemory {
    * @throws InvalidAddressException  if any address in the range address to address+value.length-1 is invalid.
    */
   @Override protected void set (int address, byte[] value) throws InvalidAddressException {
-    if ((address < 0) || ((address + value.length) > length())) {
+    if (address < 0) {
         throw new InvalidAddressException();
     }
-    for (int i = 0; i < value.length; i++) {
-        mem[address + i] = value[i];
+    try {
+        for (int i = 0; i < value.length; i++) {
+            mem[address + i] = value[i];
+        }
+    } catch (Exception e) {
+        throw new InvalidAddressException();
     }
   }
   
